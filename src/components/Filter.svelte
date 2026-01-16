@@ -41,6 +41,39 @@
   function closeModal() {
     showModal = false;
   }
+
+  function resetFilters() {
+    // Reset blues
+    filters.blues.speed = false;
+    filters.blues.stamina = false;
+    filters.blues.power = false;
+    filters.blues.guts = false;
+    filters.blues.wit = false;
+    filters.blues.stars = 1;
+
+    // Reset reds
+    filters.reds.turf = false;
+    filters.reds.dirt = false;
+    filters.reds.frontRunner = false;
+    filters.reds.paceChaser = false;
+    filters.reds.lateSurger = false;
+    filters.reds.endCloser = false;
+    filters.reds.sprint = false;
+    filters.reds.mile = false;
+    filters.reds.medium = false;
+    filters.reds.long = false;
+    filters.reds.stars = 1;
+
+    // Reset greens
+    filters.greens.stars = 0;
+
+    // Reset whites - keep only stars property
+    const whiteKeys = Object.keys(filters.whites).filter(k => k !== 'stars');
+    whiteKeys.forEach(k => {
+      filters.whites[k] = false;
+    });
+    filters.whites.stars = 1;
+  }
 </script>
 
 <button class="btn dropdown-toggle" type="button" onclick={openModal}>
@@ -319,6 +352,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger me-auto"
+                        onclick={resetFilters}>Reset Filters</button
+                    >
                     <button
                         type="button"
                         class="btn btn-secondary"
