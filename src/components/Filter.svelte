@@ -25,55 +25,57 @@
             greens: { stars: number };
             whites: { [key: string]: boolean | number; stars: number };
         };
-            availableWhites: string[] | (() => string[]);
+        availableWhites: string[] | (() => string[]);
     }
 
-  import SkillFilter from './SkillFilter.svelte';
+    import SkillFilter from "./SkillFilter.svelte";
 
-  let { filters, availableWhites }: Props = $props();
+    let { filters, availableWhites }: Props = $props();
 
-  let showModal = $state(false);
+    let showModal = $state(false);
 
-  function openModal() {
-    showModal = true;
-  }
+    function openModal() {
+        showModal = true;
+    }
 
-  function closeModal() {
-    showModal = false;
-  }
+    function closeModal() {
+        showModal = false;
+    }
 
-  function resetFilters() {
-    // Reset blues
-    filters.blues.speed = false;
-    filters.blues.stamina = false;
-    filters.blues.power = false;
-    filters.blues.guts = false;
-    filters.blues.wit = false;
-    filters.blues.stars = 1;
+    function resetFilters() {
+        // Reset blues
+        filters.blues.speed = false;
+        filters.blues.stamina = false;
+        filters.blues.power = false;
+        filters.blues.guts = false;
+        filters.blues.wit = false;
+        filters.blues.stars = 1;
 
-    // Reset reds
-    filters.reds.turf = false;
-    filters.reds.dirt = false;
-    filters.reds.frontRunner = false;
-    filters.reds.paceChaser = false;
-    filters.reds.lateSurger = false;
-    filters.reds.endCloser = false;
-    filters.reds.sprint = false;
-    filters.reds.mile = false;
-    filters.reds.medium = false;
-    filters.reds.long = false;
-    filters.reds.stars = 1;
+        // Reset reds
+        filters.reds.turf = false;
+        filters.reds.dirt = false;
+        filters.reds.frontRunner = false;
+        filters.reds.paceChaser = false;
+        filters.reds.lateSurger = false;
+        filters.reds.endCloser = false;
+        filters.reds.sprint = false;
+        filters.reds.mile = false;
+        filters.reds.medium = false;
+        filters.reds.long = false;
+        filters.reds.stars = 1;
 
-    // Reset greens
-    filters.greens.stars = 0;
+        // Reset greens
+        filters.greens.stars = 0;
 
-    // Reset whites - keep only stars property
-    const whiteKeys = Object.keys(filters.whites).filter(k => k !== 'stars');
-    whiteKeys.forEach(k => {
-      filters.whites[k] = false;
-    });
-    filters.whites.stars = 1;
-  }
+        // Reset whites - keep only stars property
+        const whiteKeys = Object.keys(filters.whites).filter(
+            (k) => k !== "stars",
+        );
+        whiteKeys.forEach((k) => {
+            filters.whites[k] = false;
+        });
+        filters.whites.stars = 1;
+    }
 </script>
 
 <button class="btn dropdown-toggle" type="button" onclick={openModal}>
@@ -161,19 +163,25 @@
                             <div class="btn-group" role="group">
                                 <button
                                     type="button"
-                                    class="btn {filters.blues.stars === 1 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.blues.stars === 1
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.blues.stars = 1)}
                                     >1</button
                                 >
                                 <button
                                     type="button"
-                                    class="btn {filters.blues.stars === 2 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.blues.stars === 2
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.blues.stars = 2)}
                                     >2</button
                                 >
                                 <button
                                     type="button"
-                                    class="btn {filters.blues.stars === 3 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.blues.stars === 3
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.blues.stars = 3)}
                                     >3</button
                                 >
@@ -301,19 +309,25 @@
                             <div class="btn-group" role="group">
                                 <button
                                     type="button"
-                                    class="btn {filters.reds.stars === 1 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.reds.stars === 1
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.reds.stars = 1)}
                                     >1</button
                                 >
                                 <button
                                     type="button"
-                                    class="btn {filters.reds.stars === 2 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.reds.stars === 2
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.reds.stars = 2)}
                                     >2</button
                                 >
                                 <button
                                     type="button"
-                                    class="btn {filters.reds.stars === 3 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.reds.stars === 3
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.reds.stars = 3)}
                                     >3</button
                                 >
@@ -326,19 +340,25 @@
                             <div class="btn-group" role="group">
                                 <button
                                     type="button"
-                                    class="btn {filters.greens.stars === 1 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.greens.stars === 1
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.greens.stars = 1)}
                                     >1</button
                                 >
                                 <button
                                     type="button"
-                                    class="btn {filters.greens.stars === 2 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.greens.stars === 2
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.greens.stars = 2)}
                                     >2</button
                                 >
                                 <button
                                     type="button"
-                                    class="btn {filters.greens.stars === 3 ? 'btn-primary' : 'btn-outline-secondary'} btn-sm"
+                                    class="btn {filters.greens.stars === 3
+                                        ? 'btn-primary'
+                                        : 'btn-outline-secondary'} btn-sm"
                                     onclick={() => (filters.greens.stars = 3)}
                                     >3</button
                                 >
@@ -347,7 +367,10 @@
                         </div>
                         <div class="col-md-3">
                             <h6>Whites (Skills)</h6>
-                            <SkillFilter whites={filters.whites} {availableWhites} />
+                            <SkillFilter
+                                whites={filters.whites}
+                                {availableWhites}
+                            />
                         </div>
                     </div>
                 </div>

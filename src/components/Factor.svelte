@@ -50,15 +50,24 @@
         if (factor.type === 2) {
             const selectedReds = Object.entries(filters.reds)
                 .filter(([k, v]) => k !== "stars" && v)
-                .map(([k]) => nameMap[k] || k.charAt(0).toUpperCase() + k.slice(1));
-            if (selectedReds.includes(factor.name) && factor.rarity >= filters.reds.stars) {
+                .map(
+                    ([k]) =>
+                        nameMap[k] || k.charAt(0).toUpperCase() + k.slice(1),
+                );
+            if (
+                selectedReds.includes(factor.name) &&
+                factor.rarity >= filters.reds.stars
+            ) {
                 return true;
             }
         }
 
         // Check whites (type 4)
         if (factor.type === 4) {
-            if (filters.whites[factor.name] && factor.rarity >= filters.whites.stars) {
+            if (
+                filters.whites[factor.name] &&
+                factor.rarity >= filters.whites.stars
+            ) {
                 return true;
             }
         }

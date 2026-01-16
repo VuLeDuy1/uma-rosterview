@@ -127,7 +127,9 @@
                 {#if display.factors}
                     <div class="mb-2">
                         <small class="text-muted">Current Unit Sparks:</small>
-                        <FactorList factorIds={charaData.factor_id_array} {filters}
+                        <FactorList
+                            factorIds={charaData.factor_id_array}
+                            {filters}
                         ></FactorList>
                     </div>
                     <hr />

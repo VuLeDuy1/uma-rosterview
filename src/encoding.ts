@@ -1,14 +1,14 @@
 /**
  * URL Encoding/Decoding for Uma Musume Roster Viewer
- * 
+ *
  * Inspired by Wynnbuilder's encoding system.
  * Uses a compact binary format converted to Base64 for URL sharing.
- * 
+ *
  * ENCODING SPEC V1:
- * 
+ *
  * Header (8 bits):
  *   - Version: 8 bits (0-255)
- * 
+ *
  * Per Character:
  *   - card_id: 20 bits (supports up to 1M)
  *   - talent_level: 3 bits (1-5)
@@ -28,7 +28,8 @@
 const ENCODING_VERSION = 2;
 
 // Custom Base64 alphabet (URL-safe)
-const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+const BASE64_CHARS =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 /**
  * BitVector class for efficient binary encoding/decoding
@@ -78,7 +79,7 @@ class BitVector {
   /** Convert to Base64 string */
   toBase64(): string {
     this.padToBase64();
-    let result = '';
+    let result = "";
     for (let i = 0; i < this.bits.length; i += 6) {
       let value = 0;
       for (let j = 0; j < 6; j++) {
@@ -109,7 +110,7 @@ class BitVector {
 }
 
 // Type imports
-import type { CharaData, SkillData, SuccessionCharaData } from './types';
+import type { CharaData, SkillData, SuccessionCharaData } from "./types";
 
 /**
  * Encode a single character to BitVector
@@ -230,7 +231,7 @@ function decodeChara(bv: BitVector): CharaData | null {
   return {
     card_id,
     talent_level,
-    create_time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+    create_time: new Date().toISOString().replace("T", " ").slice(0, 19),
     rarity: 3, // Default
     chara_seed: Math.floor(Math.random() * 1000000),
     speed,
@@ -287,7 +288,9 @@ export function decodeCharas(encoded: string): CharaData[] {
     const version = bv.read(8);
     console.log("Decoded version:", version);
     if (version !== ENCODING_VERSION) {
-      console.warn(`Encoding version mismatch: expected ${ENCODING_VERSION}, got ${version}`);
+      console.warn(
+        `Encoding version mismatch: expected ${ENCODING_VERSION}, got ${version}`,
+      );
       // Could add version migration logic here
     }
 
@@ -296,7 +299,10 @@ export function decodeCharas(encoded: string): CharaData[] {
     const charas: CharaData[] = [];
 
     for (let i = 0; i < count; i++) {
-      console.log(`Decoding character ${i + 1}/${count}, remaining bits:`, bv.remaining());
+      console.log(
+        `Decoding character ${i + 1}/${count}, remaining bits:`,
+        bv.remaining(),
+      );
       const chara = decodeChara(bv);
       if (chara) {
         console.log(`Character ${i + 1} decoded:`, chara.card_id);
@@ -309,7 +315,7 @@ export function decodeCharas(encoded: string): CharaData[] {
     console.log("Total decoded characters:", charas.length);
     return charas;
   } catch (error) {
-    console.error('Failed to decode characters:', error);
+    console.error("Failed to decode characters:", error);
     return [];
   }
 }
@@ -323,17 +329,23 @@ export function getEncodedFromUrl(): string | null {
 }
 
 export function setEncodedToUrl(encoded: string): void {
-  window.history.replaceState(null, '', `#${encoded}`);
+  window.history.replaceState(null, "", `#${encoded}`);
 }
 
 export function clearUrlEncoding(): void {
-  window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  window.history.replaceState(
+    null,
+    "",
+    window.location.pathname + window.location.search,
+  );
 }
 
 /**
  * Copy encoded string to clipboard
  */
-export async function copyEncodedToClipboard(charas: CharaData[]): Promise<boolean> {
+export async function copyEncodedToClipboard(
+  charas: CharaData[],
+): Promise<boolean> {
   try {
     const encoded = encodeCharas(charas);
     const url = `${window.location.origin}${window.location.pathname}#${encoded}`;

@@ -42,7 +42,9 @@
         data-bs-parent={`#${succesionCharaID}`}
     >
         <div class="accordion-body p-2">
-            <FactorList factorIds={successionCharaData.factor_id_array} {filters}
+            <FactorList
+                factorIds={successionCharaData.factor_id_array}
+                {filters}
             ></FactorList>
         </div>
     </div>

@@ -4,8 +4,8 @@ function stateStorage<T>(key: string, defaultValue: T) {
   const stateValue = $state({ value });
   $effect(() => {
     localStorage.setItem(key, JSON.stringify(stateValue.value));
-  })
+  });
   return stateValue;
 }
 
-export {stateStorage};
+export { stateStorage };
