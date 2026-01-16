@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { CharaData } from "../types";
     import { charaCardsData } from "../data";
+    import { getIconCardId } from "../iconMapping";
     import Stats from "./Stats.svelte";
     import SuccessionChara from "./SuccessionChara.svelte";
     import SkillList from "./SkillList.svelte";
@@ -29,14 +30,13 @@
         if (!charaCard) return "";
 
         const charaId = charaCard.chara_id;
-        const dressId =
-            charaCard.race_dress[charaData.rarity - 1] ||
-            charaCard.race_dress[0];
-        const paddedDressId = String(dressId).padStart(6, "0");
+        // Map global cardId to Japanese icon cardId if needed
+        const iconCardId = getIconCardId(charaCard.id);
+        const paddedIconCardId = String(iconCardId).padStart(6, "0");
         // Determine suffix based on talent_level (02 if >= 3, otherwise 01)
         const suffix = charaData.talent_level >= 3 ? "02" : "01";
 
-        return `/chara/chr${charaId}/trained_chr_icon_${charaId}_${paddedDressId}_${suffix}.png`;
+        return `/chara/uma/chr_icon_${charaId}_${paddedIconCardId}_${suffix}.webp`;
     });
 
     const charaDatetime = $derived(charaData.create_time.split(" "));
