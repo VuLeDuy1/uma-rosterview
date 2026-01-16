@@ -110,41 +110,41 @@
                         <div
                             class="guide-images d-flex align-items-center justify-content-center gap-3 flex-wrap"
                         >
-                            <div class="guide-step text-center">
-                                <img
-                                    class="img-fluid rounded shadow-sm"
-                                    src="/guide/guide-01.png"
-                                    alt="Step 1: Enhance"
-                                    style="height: 72px;"
-                                />
-                                <small class="d-block mt-1 text-muted"
-                                    >Enhance</small
-                                >
-                            </div>
-                            <span class="text-muted fs-4">&rarr;</span>
-                            <div class="guide-step text-center">
-                                <img
-                                    class="img-fluid rounded shadow-sm"
-                                    src="/guide/guide-02.png"
-                                    alt="Step 2: Inheritance"
-                                    style="height: 72px;"
-                                />
-                                <small class="d-block mt-1 text-muted"
-                                    >Inheritance</small
-                                >
-                            </div>
-                            <span class="text-muted fs-4">&rarr;</span>
-                            <div class="guide-step text-center">
-                                <img
-                                    class="img-fluid rounded shadow-sm"
-                                    src="/guide/guide-03.png"
-                                    alt="Step 3: Veteran List"
-                                    style="height: 72px;"
-                                />
-                                <small class="d-block mt-1 text-muted"
-                                    >Veteran List</small
-                                >
-                            </div>
+                             <div class="guide-step text-center">
+                                 <img
+                                     class="img-fluid rounded shadow-sm"
+                                     src={`${import.meta.env.BASE_URL}guide/guide-01.png`}
+                                     alt="Step 1: Enhance"
+                                     style="height: 72px;"
+                                 />
+                                 <small class="d-block mt-1 text-muted"
+                                     >Enhance</small
+                                 >
+                             </div>
+                             <span class="text-muted fs-4">&rarr;</span>
+                             <div class="guide-step text-center">
+                                 <img
+                                     class="img-fluid rounded shadow-sm"
+                                     src={`${import.meta.env.BASE_URL}guide/guide-02.png`}
+                                     alt="Step 2: Inheritance"
+                                     style="height: 72px;"
+                                 />
+                                 <small class="d-block mt-1 text-muted"
+                                     >Inheritance</small
+                                 >
+                             </div>
+                             <span class="text-muted fs-4">&rarr;</span>
+                             <div class="guide-step text-center">
+                                 <img
+                                     class="img-fluid rounded shadow-sm"
+                                     src={`${import.meta.env.BASE_URL}guide/guide-03.png`}
+                                     alt="Step 3: Veteran List"
+                                     style="height: 72px;"
+                                 />
+                                 <small class="d-block mt-1 text-muted"
+                                     >Veteran List</small
+                                 >
+                             </div>
                         </div>
                     </div>
                 </div>

@@ -1,8 +1,12 @@
 <script lang="ts">
-    import glueLogo from "./assets/glue.png";
+    import Logo from "./assets/cafe.png";
     import TrainedCharaList from "./pages/TrainedCharaList.svelte";
     import Upload from "./pages/Upload.svelte";
-    import { decodeCharas, getEncodedFromUrl, clearUrlEncoding } from "./encoding";
+    import {
+        decodeCharas,
+        getEncodedFromUrl,
+        clearUrlEncoding,
+    } from "./encoding";
 
     import type { CharaData } from "./types";
 
@@ -14,7 +18,10 @@
     // Check URL hash on load - run once
     const urlEncoded = getEncodedFromUrl();
     if (urlEncoded) {
-        console.log("Found URL hash, attempting decode...", urlEncoded.substring(0, 50));
+        console.log(
+            "Found URL hash, attempting decode...",
+            urlEncoded.substring(0, 50),
+        );
         const imported = decodeCharas(urlEncoded);
         console.log("Decoded characters:", imported.length);
         if (imported.length > 0) {
@@ -43,8 +50,8 @@
         try {
             let encoded = importText.trim();
             console.log("Processing import:", encoded.substring(0, 50));
-            if (encoded.includes('#')) {
-                encoded = encoded.split('#')[1];
+            if (encoded.includes("#")) {
+                encoded = encoded.split("#")[1];
             }
             console.log("Extracted hash:", encoded.substring(0, 50));
             const imported = decodeCharas(encoded);
@@ -76,10 +83,16 @@
         <TrainedCharaList {trainedCharas} onHome={goHome}></TrainedCharaList>
     {:else}
         <div class="text-center py-4">
-            <h1 class="display-5 fw-bold text-body-emphasis">Glue Factory</h1>
-            <img src={glueLogo} class="logo" alt="Vite Logo" />
+            <h1 class="display-5 fw-bold text-body-emphasis">
+                Umamusume Roster Viewer
+            </h1>
+            <img src={Logo} class="logo" alt="Vite Logo" />
+            <p class="display">cafe my beautiful schizophrenic wife....</p>
         </div>
-        <Upload uploaddata={(data: CharaData[]) => (trainedCharas = data)} onImport={handleImport} />
+        <Upload
+            uploaddata={(data: CharaData[]) => (trainedCharas = data)}
+            onImport={handleImport}
+        />
     {/if}
 
     <!-- Import Modal -->
@@ -90,29 +103,49 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Import Characters</h5>
-                        <button type="button" class="btn-close" onclick={closeImportModal}></button>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            onclick={closeImportModal}
+                        ></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="importInput" class="form-label">Paste the shared link:</label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
+                            <label for="importInput" class="form-label"
+                                >Paste the shared link:</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
                                 id="importInput"
                                 bind:value={importText}
                                 placeholder="https://...#encoded-data"
                             />
                         </div>
                         <div class="alert alert-info mb-0">
-                            <small><strong>Note:</strong> Import currently only includes sparks (factors). Stats and skills are not preserved in shared links.</small>
+                            <small
+                                ><strong>Note:</strong> Import currently only includes
+                                sparks (factors). Stats and skills are not preserved
+                                in shared links.</small
+                            >
                         </div>
                         {#if importError}
-                            <div class="alert alert-warning mt-3 mb-0">{importError}</div>
+                            <div class="alert alert-warning mt-3 mb-0">
+                                {importError}
+                            </div>
                         {/if}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick={closeImportModal}>Cancel</button>
-                        <button type="button" class="btn btn-primary" onclick={processImport}>Import</button>
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            onclick={closeImportModal}>Cancel</button
+                        >
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            onclick={processImport}>Import</button
+                        >
                     </div>
                 </div>
             </div>
@@ -127,6 +160,10 @@
     }
 
     .logo {
-        transform: scale(0.9);
+        transform: scale(0.8);
+    }
+
+    p {
+        opacity: 10%;
     }
 </style>
