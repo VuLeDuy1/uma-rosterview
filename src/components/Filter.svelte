@@ -8,6 +8,9 @@
                 guts: boolean;
                 wit: boolean;
                 stars: number;
+                useTotalStars: boolean;
+                totalStars: number;
+                minStars: { speed: number; stamina: number; power: number; guts: number; wit: number; };
             };
             reds: {
                 turf: boolean;
@@ -21,9 +24,17 @@
                 medium: boolean;
                 long: boolean;
                 stars: number;
+                useTotalStars: boolean;
+                totalStars: number;
+                minStars: {
+                    turf: number; dirt: number; frontRunner: number; paceChaser: number;
+                    lateSurger: number; endCloser: number; sprint: number; mile: number;
+                    medium: number; long: number;
+                };
             };
             greens: { stars: number };
             whites: { [key: string]: number };
+            whitesIncludeParents: boolean;
         };
         availableWhites: string[] | (() => string[]);
     }
@@ -50,6 +61,9 @@
         filters.blues.guts = false;
         filters.blues.wit = false;
         filters.blues.stars = 1;
+        filters.blues.useTotalStars = false;
+        filters.blues.totalStars = 9;
+        filters.blues.minStars = { speed: 0, stamina: 0, power: 0, guts: 0, wit: 0 };
 
         // Reset reds
         filters.reds.turf = false;
@@ -63,6 +77,9 @@
         filters.reds.medium = false;
         filters.reds.long = false;
         filters.reds.stars = 1;
+        filters.reds.useTotalStars = false;
+        filters.reds.totalStars = 9;
+        filters.reds.minStars = { turf: 0, dirt: 0, frontRunner: 0, paceChaser: 0, lateSurger: 0, endCloser: 0, sprint: 0, mile: 0, medium: 0, long: 0 };
 
         // Reset greens
         filters.greens.stars = 0;
@@ -72,6 +89,7 @@
         whiteKeys.forEach((k) => {
             filters.whites[k] = 0;
         });
+        filters.whitesIncludeParents = false;
     }
 </script>
 
@@ -99,6 +117,11 @@
                     <div class="row">
                         <div class="col-md-3">
                             <h6>Blues (Stats)</h6>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="blueAdvanced" bind:checked={filters.blues.useTotalStars} />
+                                <label class="form-check-label" for="blueAdvanced"><small>Lineage Mode</small></label>
+                            </div>
+                            {#if !filters.blues.useTotalStars}
                             <div class="form-check">
                                 <input
                                     class="form-check-input"
@@ -183,10 +206,24 @@
                                     >3</button
                                 >
                             </div>
+                            {:else}
+                            <div class="mb-2"><label class="form-label form-label-sm">Total Stars:</label><input type="number" class="form-control form-control-sm" min="3" max="9" bind:value={filters.blues.totalStars} /></div>
+                            <small class="text-muted">Min per stat:</small>
+                            <div class="mb-1"><label class="form-label form-label-sm">Speed:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.blues.minStars.speed} /></div>
+                            <div class="mb-1"><label class="form-label form-label-sm">Stamina:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.blues.minStars.stamina} /></div>
+                            <div class="mb-1"><label class="form-label form-label-sm">Power:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.blues.minStars.power} /></div>
+                            <div class="mb-1"><label class="form-label form-label-sm">Guts:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.blues.minStars.guts} /></div>
+                            <div class="mb-1"><label class="form-label form-label-sm">Wit:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.blues.minStars.wit} /></div>
+                            {/if}
                             <br />
                         </div>
                         <div class="col-md-3">
                             <h6>Reds (Aptitudes)</h6>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="redAdvanced" bind:checked={filters.reds.useTotalStars} />
+                                <label class="form-check-label" for="redAdvanced"><small>Lineage Mode</small></label>
+                            </div>
+                            {#if !filters.reds.useTotalStars}
                             <div class="form-check">
                                 <input
                                     class="form-check-input"
@@ -329,6 +366,22 @@
                                     >3</button
                                 >
                             </div>
+                            {:else}
+                            <div class="mb-2"><label class="form-label form-label-sm">Total Stars:</label><input type="number" class="form-control form-control-sm" min="3" max="30" bind:value={filters.reds.totalStars} /></div>
+                            <small class="text-muted">Min per apt:</small>
+                            <div class="row g-1">
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Turf:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.turf} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Dirt:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.dirt} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Front:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.frontRunner} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Pace:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.paceChaser} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Late:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.lateSurger} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">End:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.endCloser} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Sprint:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.sprint} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Mile:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.mile} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Med:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.medium} /></div>
+                            <div class="col-6 mb-1"><label class="form-label form-label-sm">Long:</label><input type="number" class="form-control form-control-sm" min="0" max="9" bind:value={filters.reds.minStars.long} /></div>
+                            </div>
+                            {/if}
                             <br />
                         </div>
                         <div class="col-md-3">
@@ -364,9 +417,21 @@
                         </div>
                         <div class="col-md-3">
                             <h6>Whites (Skills)</h6>
+                            <div class="form-check mb-2">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="whitesIncludeParents"
+                                    bind:checked={filters.whitesIncludeParents}
+                                />
+                                <label class="form-check-label" for="whitesIncludeParents">
+                                    <small>Include Parents</small>
+                                </label>
+                            </div>
                             <SkillFilter
                                 whites={filters.whites}
                                 {availableWhites}
+                                includeParents={filters.whitesIncludeParents}
                             />
                         </div>
                     </div>

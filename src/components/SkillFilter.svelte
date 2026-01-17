@@ -1,13 +1,16 @@
 <script lang="ts">
     interface Props {
-        whites: { [key: string]: number }; // 0 = not selected, 1-3 = min stars
+        whites: { [key: string]: number }; // 0 = not selected, 1-3 or 1-9 = min stars
         availableWhites: string[] | (() => string[]);
+        includeParents?: boolean;
     }
 
-    let { whites, availableWhites }: Props = $props();
+    let { whites, availableWhites, includeParents = false }: Props = $props();
 
     let showModal = $state(false);
     let searchWhites = $state("");
+
+    const maxStars = $derived(includeParents ? 9 : 3);
 
     const available = $derived(
         typeof availableWhites === "function"
@@ -46,7 +49,7 @@
 
     function cycleStars(skill: string) {
         const current = whites[skill] || 0;
-        whites[skill] = current >= 3 ? 1 : current + 1;
+        whites[skill] = current >= maxStars ? 1 : current + 1;
     }
 </script>
 
@@ -58,17 +61,20 @@
     {#if selectedWhites.length > 0}
         <div class="d-flex flex-wrap gap-1 mt-1">
             {#each selectedWhites as { name, stars }}
-                <span class="badge bg-warning text-dark d-flex align-items-center gap-1">
-                    <button 
-                        class="btn btn-sm p-0 border-0 bg-transparent"
-                        onclick={() => cycleStars(name)}
-                        title="Click to change stars"
+                <span class="badge bg-secondary text-white d-flex align-items-center gap-1">
+                    <select
+                        class="border-0 bg-transparent text-white"
+                        style="width: 45px; font-size: 0.75rem; padding: 0; outline: none; -webkit-appearance: none; appearance: none; cursor: pointer;"
+                        value={stars}
+                        onchange={(e) => selectSkill(name, parseInt(e.currentTarget.value))}
                     >
-                        {"★".repeat(stars)}{"☆".repeat(3 - stars)}
-                    </button>
+                        {#each Array.from({length: maxStars}, (_, i) => i + 1) as star}
+                            <option value={star} class="text-dark bg-white">{star}★</option>
+                        {/each}
+                    </select>
                     {name}
                     <button 
-                        class="btn-close btn-close-sm ms-1" 
+                        class="btn-close btn-close-white btn-close-sm ms-1" 
                         style="font-size: 0.6rem;"
                         onclick={() => removeSkill(name)}
                     ></button>
@@ -105,7 +111,7 @@
                         <div class="d-flex flex-wrap gap-2">
                             {#each filteredWhites as white}
                                 {@const currentStars = whites[white] || 0}
-                                <div class="btn-group">
+                                <div class="d-flex align-items-center gap-1">
                                     <button
                                         class="btn {currentStars > 0
                                             ? 'btn-warning'
@@ -115,15 +121,16 @@
                                         {white}
                                     </button>
                                     {#if currentStars > 0}
-                                        <button
-                                            class="btn btn-warning btn-sm dropdown-toggle dropdown-toggle-split"
-                                            data-bs-toggle="dropdown"
-                                        ></button>
-                                        <ul class="dropdown-menu">
-                                            <li><button class="dropdown-item {currentStars === 1 ? 'active' : ''}" onclick={() => selectSkill(white, 1)}>★☆☆ (1+)</button></li>
-                                            <li><button class="dropdown-item {currentStars === 2 ? 'active' : ''}" onclick={() => selectSkill(white, 2)}>★★☆ (2+)</button></li>
-                                            <li><button class="dropdown-item {currentStars === 3 ? 'active' : ''}" onclick={() => selectSkill(white, 3)}>★★★ (3)</button></li>
-                                        </ul>
+                                        <select
+                                            class="form-select form-select-sm"
+                                            style="width: auto;"
+                                            value={currentStars}
+                                            onchange={(e) => selectSkill(white, parseInt(e.currentTarget.value))}
+                                        >
+                                            {#each Array.from({length: maxStars}, (_, i) => i + 1) as star}
+                                                <option value={star}>{star}★</option>
+                                            {/each}
+                                        </select>
                                     {/if}
                                 </div>
                             {/each}

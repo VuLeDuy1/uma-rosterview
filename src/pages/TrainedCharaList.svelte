@@ -84,6 +84,15 @@
             guts: false,
             wit: false,
             stars: 1,
+            useTotalStars: false,
+            totalStars: 9,
+            minStars: {
+                speed: 0,
+                stamina: 0,
+                power: 0,
+                guts: 0,
+                wit: 0,
+            },
         },
         reds: {
             turf: false,
@@ -97,9 +106,24 @@
             medium: false,
             long: false,
             stars: 1,
+            useTotalStars: false,
+            totalStars: 9,
+            minStars: {
+                turf: 0,
+                dirt: 0,
+                frontRunner: 0,
+                paceChaser: 0,
+                lateSurger: 0,
+                endCloser: 0,
+                sprint: 0,
+                mile: 0,
+                medium: 0,
+                long: 0,
+            },
         },
         greens: { stars: 0 },
         whites: {} as { [key: string]: number },
+        whitesIncludeParents: false,
     });
 
     const availableWhites = $derived(() => {
@@ -148,39 +172,152 @@
                 const allFactors = chara.factor_id_array;
 
                 // Blues
-                const selectedBlues = Object.entries(filters.blues)
-                    .filter(([k, v]) => k !== "stars" && v)
-                    .map(([k]) => k.charAt(0).toUpperCase() + k.slice(1));
-                if (selectedBlues.length > 0) {
-                    const hasBlue = allFactors.some((id) => {
-                        const f = factorsData[id];
-                        return (
-                            f?.type === 1 &&
-                            selectedBlues.includes(f.name) &&
-                            f.rarity >= filters.blues.stars
-                        );
+                if (filters.blues.useTotalStars) {
+                    // Get blue spark from current unit (type === 1)
+                    const currentBlue = chara.factor_id_array
+                        .map((id) => factorsData[id])
+                        .find((f) => f?.type === 1);
+
+                    // Get blue spark from each parent
+                    const parent1Blue = chara.succession_chara_array[0]?.factor_id_array
+                        .map((id) => factorsData[id])
+                        .find((f) => f?.type === 1);
+
+                    const parent2Blue = chara.succession_chara_array[1]?.factor_id_array
+                        .map((id) => factorsData[id])
+                        .find((f) => f?.type === 1);
+
+                    // Sum their rarity values
+                    const totalBlueStars = 
+                        (currentBlue?.rarity || 0) + 
+                        (parent1Blue?.rarity || 0) + 
+                        (parent2Blue?.rarity || 0);
+
+                    // Debug for first chara
+                    if (trainedCharas.indexOf(chara) === 0) {
+                        console.log("=== Blue Lineage Debug ===");
+                        console.log("Current unit blue:", currentBlue?.name, currentBlue?.rarity);
+                        console.log("Parent 1 blue:", parent1Blue?.name, parent1Blue?.rarity);
+                        console.log("Parent 2 blue:", parent2Blue?.name, parent2Blue?.rarity);
+                        console.log("Total blue stars:", totalBlueStars);
+                        console.log("Required:", filters.blues.totalStars);
+                    }
+
+                    // Collect all 3 blue factors for stat checking
+                    const blueFactors = [currentBlue, parent1Blue, parent2Blue].filter(Boolean);
+
+                    // Calculate stars per stat
+                    const statStars = { Speed: 0, Stamina: 0, Power: 0, Guts: 0, Wit: 0 };
+                    blueFactors.forEach((f) => {
+                        if (f && f.name in statStars) {
+                            statStars[f.name as keyof typeof statStars] += f.rarity;
+                        }
                     });
-                    isDisplayed = isDisplayed && hasBlue;
+
+                    // Check total requirement
+                    if (totalBlueStars < filters.blues.totalStars) {
+                        isDisplayed = false;
+                    } else {
+                        // Check individual stat minimums
+                        const statMap = { Speed: "speed", Stamina: "stamina", Power: "power", Guts: "guts", Wit: "wit" } as const;
+                        for (const [factorName, filterKey] of Object.entries(statMap)) {
+                            const minRequired = filters.blues.minStars[filterKey as keyof typeof filters.blues.minStars];
+                            if (minRequired > 0 && statStars[factorName as keyof typeof statStars] < minRequired) {
+                                isDisplayed = false;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    const selectedBlues = Object.entries(filters.blues)
+                        .filter(([k, v]) => k !== "stars" && k !== "useTotalStars" && k !== "totalStars" && k !== "minStars" && v)
+                        .map(([k]) => k.charAt(0).toUpperCase() + k.slice(1));
+                    if (selectedBlues.length > 0) {
+                        const hasBlue = allFactors.some((id) => {
+                            const f = factorsData[id];
+                            return (
+                                f?.type === 1 &&
+                                selectedBlues.includes(f.name) &&
+                                f.rarity >= filters.blues.stars
+                            );
+                        });
+                        isDisplayed = isDisplayed && hasBlue;
+                    }
                 }
 
                 // Reds
-                const selectedReds = Object.entries(filters.reds)
-                    .filter(([k, v]) => k !== "stars" && v)
-                    .map(
-                        ([k]) =>
-                            (nameMap as Record<string, string>)[k] ||
-                            k.charAt(0).toUpperCase() + k.slice(1),
-                    );
-                if (selectedReds.length > 0) {
-                    const hasRed = allFactors.some((id) => {
-                        const f = factorsData[id];
-                        return (
-                            f?.type === 2 &&
-                            selectedReds.includes(f.name) &&
-                            f.rarity >= filters.reds.stars
-                        );
+                if (filters.reds.useTotalStars) {
+                    // Get red spark from current unit (type === 2)
+                    const currentRed = chara.factor_id_array
+                        .map((id) => factorsData[id])
+                        .find((f) => f?.type === 2);
+
+                    // Get red spark from each parent
+                    const parent1Red = chara.succession_chara_array[0]?.factor_id_array
+                        .map((id) => factorsData[id])
+                        .find((f) => f?.type === 2);
+
+                    const parent2Red = chara.succession_chara_array[1]?.factor_id_array
+                        .map((id) => factorsData[id])
+                        .find((f) => f?.type === 2);
+
+                    // Sum their rarity values
+                    const totalRedStars = 
+                        (currentRed?.rarity || 0) + 
+                        (parent1Red?.rarity || 0) + 
+                        (parent2Red?.rarity || 0);
+
+                    // Collect all 3 red factors for aptitude checking
+                    const redFactors = [currentRed, parent1Red, parent2Red].filter(Boolean);
+
+                    // Calculate stars per aptitude
+                    const aptStars = {
+                        Turf: 0, Dirt: 0, "Front Runner": 0, "Pace Chaser": 0,
+                        "Late Surger": 0, "End Closer": 0, Sprint: 0, Mile: 0, Medium: 0, Long: 0,
+                    };
+                    redFactors.forEach((f) => {
+                        if (f && f.name in aptStars) {
+                            aptStars[f.name as keyof typeof aptStars] += f.rarity;
+                        }
                     });
-                    isDisplayed = isDisplayed && hasRed;
+
+                    // Check total requirement
+                    if (totalRedStars < filters.reds.totalStars) {
+                        isDisplayed = false;
+                    } else {
+                        // Check individual aptitude minimums
+                        const aptMap = {
+                            Turf: "turf", Dirt: "dirt", "Front Runner": "frontRunner", "Pace Chaser": "paceChaser",
+                            "Late Surger": "lateSurger", "End Closer": "endCloser",
+                            Sprint: "sprint", Mile: "mile", Medium: "medium", Long: "long",
+                        } as const;
+                        for (const [factorName, filterKey] of Object.entries(aptMap)) {
+                            const minRequired = filters.reds.minStars[filterKey as keyof typeof filters.reds.minStars];
+                            if (minRequired > 0 && aptStars[factorName as keyof typeof aptStars] < minRequired) {
+                                isDisplayed = false;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    const selectedReds = Object.entries(filters.reds)
+                        .filter(([k, v]) => k !== "stars" && k !== "useTotalStars" && k !== "totalStars" && k !== "minStars" && v)
+                        .map(
+                            ([k]) =>
+                                (nameMap as Record<string, string>)[k] ||
+                                k.charAt(0).toUpperCase() + k.slice(1),
+                        );
+                    if (selectedReds.length > 0) {
+                        const hasRed = allFactors.some((id) => {
+                            const f = factorsData[id];
+                            return (
+                                f?.type === 2 &&
+                                selectedReds.includes(f.name) &&
+                                f.rarity >= filters.reds.stars
+                            );
+                        });
+                        isDisplayed = isDisplayed && hasRed;
+                    }
                 }
 
                 // Greens - only filter when stars > 1 (0 or 1 means no filter)
@@ -200,17 +337,57 @@
                     .filter(([_, v]) => v > 0)
                     .map(([k, v]) => ({ name: k, minStars: v }));
                 if (selectedWhites.length > 0) {
-                    const hasAllWhites = selectedWhites.every(({ name, minStars }) =>
-                        allFactors.some((id) => {
-                            const f = factorsData[id];
-                            return (
-                                (f?.type === 4 || f?.type === 5 || f?.type === 6) &&
-                                f.name === name &&
-                                f.rarity >= minStars
-                            );
-                        }),
-                    );
-                    isDisplayed = isDisplayed && hasAllWhites;
+                    if (filters.whitesIncludeParents) {
+                        // Get ONE matching white factor from each unit (current + parents)
+                        const hasAllWhites = selectedWhites.every(({ name, minStars }) => {
+                            // Find the white factor from current unit
+                            const currentWhite = chara.factor_id_array
+                                .map((id) => factorsData[id])
+                                .find((f) => f && (f.type === 4 || f.type === 5 || f.type === 6) && f.name === name);
+
+                            // Find the white factor from parent 1
+                            const parent1White = chara.succession_chara_array[0]?.factor_id_array
+                                .map((id) => factorsData[id])
+                                .find((f) => f && (f.type === 4 || f.type === 5 || f.type === 6) && f.name === name);
+
+                            // Find the white factor from parent 2
+                            const parent2White = chara.succession_chara_array[1]?.factor_id_array
+                                .map((id) => factorsData[id])
+                                .find((f) => f && (f.type === 4 || f.type === 5 || f.type === 6) && f.name === name);
+
+                            // Sum their rarities
+                            const totalStars = 
+                                (currentWhite?.rarity || 0) + 
+                                (parent1White?.rarity || 0) + 
+                                (parent2White?.rarity || 0);
+
+                            // Debug for first chara
+                            if (trainedCharas.indexOf(chara) === 0 && selectedWhites.length > 0) {
+                                console.log("=== White Spark Debug ===");
+                                console.log("Skill:", name);
+                                console.log("Current:", currentWhite?.name, currentWhite?.rarity);
+                                console.log("Parent 1:", parent1White?.name, parent1White?.rarity);
+                                console.log("Parent 2:", parent2White?.name, parent2White?.rarity);
+                                console.log("Total stars:", totalStars, "Required:", minStars);
+                            }
+
+                            return totalStars >= minStars;
+                        });
+                        isDisplayed = isDisplayed && hasAllWhites;
+                    } else {
+                        // Original: check only current unit
+                        const hasAllWhites = selectedWhites.every(({ name, minStars }) =>
+                            allFactors.some((id) => {
+                                const f = factorsData[id];
+                                return (
+                                    (f?.type === 4 || f?.type === 5 || f?.type === 6) &&
+                                    f.name === name &&
+                                    f.rarity >= minStars
+                                );
+                            }),
+                        );
+                        isDisplayed = isDisplayed && hasAllWhites;
+                    }
                 }
 
                 return isDisplayed;
