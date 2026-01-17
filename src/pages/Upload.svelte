@@ -77,7 +77,7 @@
                         <div class="btn-group" role="group">
                             <a
                                 class="btn btn-slate"
-                                href="https://github.com/xancia/UmaExtractor/releases/tag/v1.0"
+                                href="https://github.com/xancia/UmaExtractor/releases"
                                 target="_blank"
                                 rel="noopener"
                             >
