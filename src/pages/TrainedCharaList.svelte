@@ -3,7 +3,7 @@
     import Chara from "../components/Chara.svelte";
     import Filter from "../components/Filter.svelte";
     import { stateStorage } from "../localstorage.svelte";
-    import { charaCardsData, factorsData, skillsData } from "../data";
+    import { charaCardsData, factorsData } from "../data";
     import {
         encodeCharas,
         decodeCharas,
@@ -413,15 +413,5 @@
 
     .btn-group .btn-slate-light:last-child {
         border-right-color: #94a3b8;
-    }
-
-    .skill-icon {
-        object-fit: cover;
-        border: 1px solid #dee2e6;
-    }
-
-    .skill-icon:hover {
-        transform: scale(1.1);
-        transition: transform 0.2s;
     }
 </style>

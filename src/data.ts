@@ -1,6 +1,5 @@
 import factorData from "./assets/factor.json";
 import charaCardDataRaw from "./assets/characard.json";
-import skillData from "./assets/skill.json";
 
 interface Factor {
   id: number;
@@ -23,13 +22,6 @@ interface CharaCard {
   race_dress: number[];
 }
 
-interface Skill {
-  id: number;
-  name: string;
-  rarity: number;
-  icon_id: number;
-}
-
 const createLookup = <T extends { id: number }>(data: T[]) =>
   Object.fromEntries(data.map((item) => [item.id, item]));
 
@@ -44,7 +36,6 @@ const factorsData = createLookup((factorData as any).value as Factor[]);
 const charaCardsData = createLookup(
   (charaCardDataRaw.value as TerumiCharaCard[]).map(transformCharaCard),
 );
-const skillsData = createLookup(skillData as Skill[]);
 
-export { factorsData, charaCardsData, skillsData };
-export type { Factor, CharaCard, Skill };
+export { factorsData, charaCardsData };
+export type { Factor, CharaCard };

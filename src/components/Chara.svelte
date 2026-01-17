@@ -4,7 +4,6 @@
     import { getIconCardId } from "../iconMapping";
     import Stats from "./Stats.svelte";
     import SuccessionChara from "./SuccessionChara.svelte";
-    import SkillList from "./SkillList.svelte";
     import FactorList from "./FactorList.svelte";
     import Apttitudes from "./Apttitudes.svelte";
 
@@ -118,8 +117,6 @@
                         wiz={charaData.wiz}
                     ></Stats>
                     <Apttitudes {charaData}></Apttitudes>
-                    <hr />
-                    <SkillList skillList={charaData.skill_array}></SkillList>
                     {#if display.factors}
                         <hr />
                     {/if}
