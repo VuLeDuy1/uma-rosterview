@@ -7,7 +7,7 @@
             blues: { [key: string]: boolean | number; stars: number };
             reds: { [key: string]: boolean | number; stars: number };
             greens: { stars: number };
-            whites: { [key: string]: boolean | number; stars: number };
+            whites: { [key: string]: number };
         };
     }
     const { factorId, filters }: Props = $props();
@@ -62,12 +62,10 @@
             }
         }
 
-        // Check whites (type 4)
-        if (factor.type === 4) {
-            if (
-                filters.whites[factor.name] &&
-                factor.rarity >= filters.whites.stars
-            ) {
+        // Check whites (type 4 = skill, type 5 = race, type 6 = scenario)
+        if (factor.type === 4 || factor.type === 5 || factor.type === 6) {
+            const minStars = filters.whites[factor.name];
+            if (minStars > 0 && factor.rarity >= minStars) {
                 return true;
             }
         }

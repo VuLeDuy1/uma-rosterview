@@ -8,7 +8,7 @@
             blues: { [key: string]: boolean | number; stars: number };
             reds: { [key: string]: boolean | number; stars: number };
             greens: { stars: number };
-            whites: { [key: string]: boolean | number; stars: number };
+            whites: { [key: string]: number };
         };
     }
     const { factorIds, filters }: Props = $props();
