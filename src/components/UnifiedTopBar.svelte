@@ -16,7 +16,7 @@
 
   // Configure your apps here - update URLs as needed
   const apps: AppLink[] = [
-    { id: 'guide', name: 'Guide', url: '/', iconType: 'guide', description: 'Guides & References' },
+    { id: 'guide', name: 'Guide', url: 'https://uma.guide/', iconType: 'guide', description: 'Guides & References' },
     { id: 'drafter', name: 'Drafter', url: 'https://drafter.uma.guide', iconType: 'tools', description: 'Uma Drafter' },
     { id: 'sparks', name: 'Roster Viewer', url: 'https://roster.uma.guide', iconType: 'tracker', description: 'Uma Sparks Viewer' },
   ];
