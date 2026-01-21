@@ -16,18 +16,19 @@
     let importText = $state("");
     let importError = $state("");
 
-    // Check URL hash on load - run once
+    // Check URL hash on load - run once (async)
     const urlEncoded = getEncodedFromUrl();
     if (urlEncoded) {
         console.log(
             "Found URL hash, attempting decode...",
             urlEncoded.substring(0, 50),
         );
-        const imported = decodeCharas(urlEncoded);
-        console.log("Decoded characters:", imported.length);
-        if (imported.length > 0) {
-            trainedCharas = imported;
-        }
+        decodeCharas(urlEncoded).then((imported) => {
+            console.log("Decoded characters:", imported.length);
+            if (imported.length > 0) {
+                trainedCharas = imported;
+            }
+        });
     }
 
     // Only load dev data if no URL import happened
@@ -47,7 +48,7 @@
         importError = "";
     }
 
-    function processImport() {
+    async function processImport() {
         try {
             let encoded = importText.trim();
             console.log("Processing import:", encoded.substring(0, 50));
@@ -55,7 +56,7 @@
                 encoded = encoded.split("#")[1];
             }
             console.log("Extracted hash:", encoded.substring(0, 50));
-            const imported = decodeCharas(encoded);
+            const imported = await decodeCharas(encoded);
             console.log("Decoded characters:", imported.length, imported);
             if (imported.length === 0) {
                 importError = "No valid characters found in the link";
@@ -129,9 +130,9 @@
                         </div>
                         <div class="alert alert-info mb-0">
                             <small
-                                ><strong>Note:</strong> Import currently only includes
-                                sparks (factors). Stats and skills are not preserved
-                                in shared links.</small
+                                ><strong>Note:</strong> Shared links include all character
+                                data: stats, skills, sparks (factors), and parents. Links
+                                are automatically compressed for shorter URLs.</small
                             >
                         </div>
                         {#if importError}

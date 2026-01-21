@@ -32,10 +32,11 @@
 
     async function handleExport() {
         try {
-            const encoded = encodeCharas(trainedCharasFiltered);
+            const encoded = await encodeCharas(trainedCharasFiltered);
             const url = `${window.location.origin}${window.location.pathname}#${encoded}`;
             await navigator.clipboard.writeText(url);
-            exportMessage = "Link copied to clipboard!";
+            const savings = encoded.startsWith("z") ? " (compressed)" : "";
+            exportMessage = `Link copied to clipboard!${savings}`;
             setTimeout(() => (exportMessage = ""), 3000);
         } catch (err) {
             exportMessage = "Failed to copy";
@@ -49,14 +50,14 @@
         importError = "";
     }
 
-    function processImport() {
+    async function processImport() {
         try {
             // Extract hash from URL or use as-is
             let encoded = importText.trim();
             if (encoded.includes("#")) {
                 encoded = encoded.split("#")[1];
             }
-            const imported = decodeCharas(encoded);
+            const imported = await decodeCharas(encoded);
             if (imported.length === 0) {
                 importError = "No valid characters found in the link";
                 return;
