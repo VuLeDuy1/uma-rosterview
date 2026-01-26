@@ -57,24 +57,36 @@
     <button class="btn btn-outline-secondary btn-sm mb-2" onclick={openModal}>
         Select Skills ({selectedWhites.length} selected)
     </button>
-    
+
     {#if selectedWhites.length > 0}
-        <div class="d-flex flex-wrap gap-1 mt-1" style="max-width: 100%; overflow: hidden;">
+        <div
+            class="d-flex flex-wrap gap-1 mt-1"
+            style="max-width: 100%; overflow: hidden;"
+        >
             {#each selectedWhites as { name, stars }}
-                <span class="badge bg-secondary text-white d-flex align-items-center gap-1" style="max-width: 100%; font-size: 0.7rem;">
+                <span
+                    class="badge bg-secondary text-white d-flex align-items-center gap-1"
+                    style="max-width: 100%; font-size: 0.7rem;"
+                >
                     <select
                         class="flex-shrink-0 text-white"
                         style="width: 40px; font-size: 0.7rem; padding: 1px 14px 1px 4px; outline: none; cursor: pointer; background: rgba(255,255,255,0.15) url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22white%22 d=%22M2 4l4 4 4-4z%22/></svg>') no-repeat right 2px center; border: 1px solid rgba(255,255,255,0.5); border-radius: 3px; -webkit-appearance: none; appearance: none;"
                         value={stars}
-                        onchange={(e) => selectSkill(name, parseInt(e.currentTarget.value))}
+                        onchange={(e) =>
+                            selectSkill(name, parseInt(e.currentTarget.value))}
                     >
-                        {#each Array.from({length: maxStars}, (_, i) => i + 1) as star}
-                            <option value={star} class="text-dark bg-white">{star}★</option>
+                        {#each Array.from({ length: maxStars }, (_, i) => i + 1) as star}
+                            <option value={star} class="text-dark bg-white"
+                                >{star}★</option
+                            >
                         {/each}
                     </select>
-                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;" title={name}>{name}</span>
-                    <button 
-                        class="btn-close btn-close-white btn-close-sm ms-1 flex-shrink-0" 
+                    <span
+                        style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;"
+                        title={name}>{name}</span
+                    >
+                    <button
+                        class="btn-close btn-close-white btn-close-sm ms-1 flex-shrink-0"
                         style="font-size: 0.5rem;"
                         onclick={() => removeSkill(name)}
                     ></button>
@@ -116,7 +128,11 @@
                                         class="btn {currentStars > 0
                                             ? 'btn-warning'
                                             : 'btn-outline-secondary'} btn-sm"
-                                        onclick={() => selectSkill(white, currentStars > 0 ? 0 : 1)}
+                                        onclick={() =>
+                                            selectSkill(
+                                                white,
+                                                currentStars > 0 ? 0 : 1,
+                                            )}
                                     >
                                         {white}
                                     </button>
@@ -125,10 +141,18 @@
                                             class="form-select form-select-sm"
                                             style="width: auto;"
                                             value={currentStars}
-                                            onchange={(e) => selectSkill(white, parseInt(e.currentTarget.value))}
+                                            onchange={(e) =>
+                                                selectSkill(
+                                                    white,
+                                                    parseInt(
+                                                        e.currentTarget.value,
+                                                    ),
+                                                )}
                                         >
-                                            {#each Array.from({length: maxStars}, (_, i) => i + 1) as star}
-                                                <option value={star}>{star}★</option>
+                                            {#each Array.from({ length: maxStars }, (_, i) => i + 1) as star}
+                                                <option value={star}
+                                                    >{star}★</option
+                                                >
                                             {/each}
                                         </select>
                                     {/if}
