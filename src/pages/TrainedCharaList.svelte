@@ -15,8 +15,9 @@
     interface Props {
         trainedCharas: CharaData[];
         onHome?: () => void;
+        onAffinityClick?: () => void;
     }
-    const { trainedCharas, onHome }: Props = $props();
+    const { trainedCharas, onHome, onAffinityClick }: Props = $props();
 
     const display = stateStorage("display", { stats: true, factors: true });
     function onDisplayClick(event: Event, key: string) {
@@ -556,6 +557,16 @@
                         title="Back to upload"
                     >
                         Home
+                    </button>
+                {/if}
+
+                {#if onAffinityClick}
+                    <button
+                        class="btn btn-primary btn-sm"
+                        onclick={onAffinityClick}
+                        title="Open affinity calculator"
+                    >
+                        Affinity Calculator
                     </button>
                 {/if}
 

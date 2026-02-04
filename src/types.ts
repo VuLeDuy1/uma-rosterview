@@ -18,6 +18,7 @@ interface CharaBaseData {
 
 interface SuccessionCharaData extends CharaBaseData {
   position_id: number;
+  win_saddle_id_array?: number[];
 }
 
 interface CharaData extends CharaBaseData {
@@ -46,6 +47,7 @@ interface CharaData extends CharaBaseData {
   skill_array: SkillData[];
   succession_chara_array: SuccessionCharaData[];
   support_card_list: SupportCardData[];
+  win_saddle_id_array?: number[];
 }
 
 export type { CharaData, SkillData, SuccessionCharaData };
