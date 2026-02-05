@@ -148,7 +148,9 @@
                 Umamusume Roster Viewer
             </h1>
             <img src={Logo} class="logo" alt="Vite Logo" />
-            <p class="display">cafe my beautiful schizophrenic wife....</p>
+            <p class="display">
+                Manhattan Cafe, my cute lil asylum escapee....
+            </p>
         </div>
         <Upload
             uploaddata={(data: CharaData[]) => (trainedCharas = data)}
@@ -186,8 +188,8 @@
                         <div class="alert alert-info mb-0">
                             <small
                                 ><strong>Note:</strong> Shared links include all character
-                                data: stats, skills, sparks (factors), and parents. Links
-                                are automatically compressed for shorter URLs.</small
+                                data: stats, skills, sparks (factors), and parents.
+                                Links are automatically compressed for shorter URLs.</small
                             >
                         </div>
                         {#if importError}
