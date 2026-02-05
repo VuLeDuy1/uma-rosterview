@@ -1,6 +1,7 @@
 <script lang="ts">
     import Logo from "./assets/cafe.png";
     import TrainedCharaList from "./pages/TrainedCharaList.svelte";
+    import Affinity from "./pages/Affinity.svelte";
     import Upload from "./pages/Upload.svelte";
     import UnifiedTopBar from "./components/UnifiedTopBar.svelte";
     import {
@@ -12,12 +13,31 @@
     import type { CharaData } from "./types";
 
     let trainedCharas: CharaData[] | undefined = $state();
+    let currentPage = $state<"roster" | "affinity">("roster");
     let showImportModal = $state(false);
     let importText = $state("");
     let importError = $state("");
 
+    // Parse hash for routing and data
+    function parseHash() {
+        const hash = window.location.hash.slice(1); // Remove #
+
+        // Check if it's a route
+        if (hash.startsWith("/affinity")) {
+            currentPage = "affinity";
+            return null;
+        } else if (hash.startsWith("/")) {
+            currentPage = "roster";
+            return null;
+        }
+
+        // Otherwise treat as encoded data
+        currentPage = "roster";
+        return hash || null;
+    }
+
     // Check URL hash on load - run once (async)
-    const urlEncoded = getEncodedFromUrl();
+    const urlEncoded = parseHash();
     if (urlEncoded) {
         console.log(
             "Found URL hash, attempting decode...",
@@ -29,6 +49,23 @@
                 trainedCharas = imported;
             }
         });
+    }
+
+    // Listen for hash changes
+    function handleHashChange() {
+        const hash = window.location.hash.slice(1);
+        if (hash.startsWith("/affinity")) {
+            currentPage = "affinity";
+        } else if (hash.startsWith("/")) {
+            currentPage = "roster";
+        } else {
+            // Empty hash or encoded data - show roster
+            currentPage = "roster";
+        }
+    }
+
+    if (typeof window !== "undefined") {
+        window.addEventListener("hashchange", handleHashChange);
     }
 
     // Only load dev data if no URL import happened
@@ -76,7 +113,17 @@
 
     function goHome() {
         trainedCharas = undefined;
-        clearUrlEncoding();
+        window.location.hash = "";
+        currentPage = "roster";
+    }
+
+    function showAffinityPage() {
+        window.location.hash = "/affinity";
+    }
+
+    function showRosterPage() {
+        window.location.hash = "";
+        currentPage = "roster";
     }
 </script>
 
@@ -86,7 +133,15 @@
 
 <main class="container container-fluid text-center">
     {#if trainedCharas}
-        <TrainedCharaList {trainedCharas} onHome={goHome}></TrainedCharaList>
+        {#if currentPage === "affinity"}
+            <Affinity {trainedCharas}></Affinity>
+        {:else}
+            <TrainedCharaList
+                {trainedCharas}
+                onHome={goHome}
+                onAffinityClick={showAffinityPage}
+            ></TrainedCharaList>
+        {/if}
     {:else}
         <div class="text-center py-4">
             <h1 class="display-5 fw-bold text-body-emphasis">
