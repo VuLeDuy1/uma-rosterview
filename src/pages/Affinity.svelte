@@ -37,6 +37,7 @@
     let sortedUmas = $state<
         Array<{ uma: CharaData; affinity: AffinityResult }>
     >([]);
+    let searchQuery = $state("");
 
     // Default display settings for Chara component
     const display = { stats: true, factors: true };
@@ -103,6 +104,16 @@
         selectedCharaId = target.value;
         calculateAffinities();
     }
+
+    // Filter sorted umas based on search query
+    const filteredUmas = $derived.by(() => {
+        if (!searchQuery) return sortedUmas;
+
+        return sortedUmas.filter((item) => {
+            const charaName = charaCardsData[item.uma.card_id]?.name || "";
+            return charaName.toLowerCase().includes(searchQuery.toLowerCase());
+        });
+    });
 </script>
 
 <div class="container-fluid">
@@ -155,30 +166,41 @@
             </p>
         </div>
     {:else}
-        <!-- Results count -->
+        <!-- Results count and search -->
         <div class="mb-3">
-            <p class="text-muted">
-                Showing {sortedUmas.length} uma(s) as potential Parent 1 sorted by
-                affinity with
-                <strong
-                    >{uniqueCharacters.find(
-                        (c) => c.charaId === selectedCharaId,
-                    )?.charaName}</strong
-                >
-            </p>
-            <p class="text-muted text-sm">
-                <em
-                    >Note: Parent 2 affinity is not calculated (Values will be
-                    slightly lower than in-game)</em
-                >
-            </p>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <p class="text-muted mb-1">
+                        Showing {filteredUmas.length} of {sortedUmas.length} uma(s) as potential Parent 1 sorted by
+                        affinity with
+                        <strong
+                            >{uniqueCharacters.find(
+                                (c) => c.charaId === selectedCharaId,
+                            )?.charaName}</strong
+                        >
+                    </p>
+                    <p class="text-muted text-sm mb-0">
+                        <em
+                            >Note: Parent 2 affinity is not calculated (Values will be
+                            slightly lower than in-game)</em
+                        >
+                    </p>
+                </div>
+                <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    placeholder="Search by character name..."
+                    bind:value={searchQuery}
+                    style="width: 250px;"
+                />
+            </div>
         </div>
     {/if}
 
     <!-- Display sorted umas in grid -->
-    {#if selectedCharaId && sortedUmas.length > 0}
+    {#if selectedCharaId && filteredUmas.length > 0}
         <div class="row row-cols-1 row-cols-lg-2 g-5 py-4">
-            {#each sortedUmas as item (item.uma.chara_seed)}
+            {#each filteredUmas as item (item.uma.chara_seed)}
                 <div class="col">
                     <!-- Affinity badges -->
                     <div class="affinity-score-badge">
@@ -215,6 +237,10 @@
                     <Chara charaData={item.uma} {display} {filters}></Chara>
                 </div>
             {/each}
+        </div>
+    {:else if selectedCharaId && searchQuery}
+        <div class="alert alert-warning" role="alert">
+            No characters found matching "{searchQuery}". Try a different search term.
         </div>
     {/if}
 </div>
