@@ -832,5 +832,11 @@
         "race_id": 1027,
         "race_name": "Tenno Sho (Spring)",
         "saddle_id": 153
+    },
+    {
+        "group_id": 17,
+        "race_id": 1028,
+        "race_name": "Satsuki Sho",
+        "saddle_id": 155
     }
 ]
